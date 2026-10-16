@@ -1,0 +1,46 @@
+
+services:
+  postgres-dev:
+    build:
+      context: .
+      dockerfile: Containerfile
+
+    image: localhost/postgres-mcp-dev:latest
+    container_name: postgres-dev
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD fehlt in .env}
+      POSTGRES_DB: extension_test
+
+      OPENCODE_SERVER_URL: http://127.0.0.1:4096
+      OPENCODE_DEFAULT_PROJECT: /workspace
+
+      MCP_TRANSPORT: http
+      MCP_HTTP_HOST: 0.0.0.0
+      MCP_HTTP_PORT: "14096"
+
+    ports:
+      - "127.0.0.1:15432:5432"
+      - "127.0.0.1:14096:14096"
+
+    volumes:
+      - pgdev-data:/var/lib/postgresql
+      - ./workspace:/workspace:Z
+      - pgdev-cargo:/opt/cargo
+      - pgdev-rustup:/opt/rustup
+      - pgdev-opencode-data:/root/.local/share/opencode
+      - pgdev-opencode-config:/root/.config/opencode
+
+    init: true
+    stop_grace_period: 30s
+
+volumes:
+  pgdev-data:
+  pgdev-cargo:
+  pgdev-rustup:
+  pgdev-opencode-data:
+  pgdev-opencode-config:
+
+
