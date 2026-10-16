@@ -1,0 +1,27 @@
+[package]
+name = "ovfs"
+version = "0.1.0"
+edition = "2021"
+description = "Bareos catalog directory trees as JSON for restores"
+
+[lib]
+crate-type = ["cdylib"]
+
+[features]
+default = ["pg19"]
+pg13 = ["pgrx/pg13", "pgrx-tests/pg13" ]
+pg14 = ["pgrx/pg14", "pgrx-tests/pg14" ]
+pg15 = ["pgrx/pg15", "pgrx-tests/pg15" ]
+pg16 = ["pgrx/pg16", "pgrx-tests/pg16" ]
+pg17 = ["pgrx/pg17", "pgrx-tests/pg17" ]
+pg18 = ["pgrx/pg18", "pgrx-tests/pg18" ]
+pg19 = ["pgrx/pg19", "pgrx-tests/pg19" ]
+pg_test = []
+
+[dependencies]
+ovfs-core = { path = "../ovfs-core" }
+pgrx = "=0.19.3"
+serde_json = "1"
+
+[dev-dependencies]
+pgrx-tests = "=0.19.3"

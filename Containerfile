@@ -1,4 +1,5 @@
 
+# Getestet wird gegen die neueste PostgreSQL-Version
 FROM docker.io/library/postgres:19beta4-trixie
 
 RUN apt-get update && \
@@ -9,14 +10,13 @@ RUN apt-get update && \
       git \
       make \
       postgresql-server-dev-19 \
-      postgresql-contrib-19 \
+      libclang-dev \
       gdb \
       pkg-config \
       curl \
       ca-certificates \
-      build-essential \
-      pkg-config \
       libssl-dev \
+      sudo \
       npm \
     && rm -rf /var/lib/apt/lists/*
 
@@ -25,6 +25,11 @@ RUN apt-get update && \
     ENV CARGO_HOME=/opt/cargo
     ENV PATH="/opt/cargo/bin:/root/.opencode/bin:${PATH}"
     RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal 
+
+    # pgrx für die PostgreSQL-Extension; nach /usr/local, weil /opt/cargo ein Volume ist
+    ARG PGRX_VERSION=0.19.3
+    RUN cargo install --locked --root /usr/local cargo-pgrx --version "$PGRX_VERSION" \
+    && cargo pgrx init --pg19 /usr/lib/postgresql/19/bin/pg_config
 
     # OpenCode 2 installieren
     RUN curl -fsSL https://opencode.ai/v2/install | bash

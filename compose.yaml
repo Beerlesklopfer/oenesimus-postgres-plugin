@@ -33,6 +33,7 @@ services:
     volumes:
       - pgdev-data:/var/lib/postgresql
       - ./workspace:/workspace:Z
+      - ./ovfs:/src/ovfs:Z
       - ./config/opencode.json:/etc/opencode/opencode.json:ro,Z
       - pgdev-cargo:/opt/cargo
       - pgdev-rustup:/opt/rustup

@@ -1,0 +1,7 @@
+comment = 'Bareos catalog directory trees as JSON for restores'
+default_version = '@CARGO_VERSION@'
+module_pathname = 'ovfs'
+relocatable = false
+schema = ovfs
+superuser = true
+trusted = false
