@@ -15,11 +15,16 @@ services:
       POSTGRES_DB: extension_test
 
       OPENCODE_SERVER_URL: http://127.0.0.1:4096
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:?OPENCODE_SERVER_PASSWORD fehlt in .env}
       OPENCODE_DEFAULT_PROJECT: /workspace
 
       MCP_TRANSPORT: http
       MCP_HTTP_HOST: 0.0.0.0
       MCP_HTTP_PORT: "14096"
+
+      # LM Studio auf dem Host als Modell-Provider für OpenCode
+      OPENCODE_CONFIG: /etc/opencode/opencode.json
+      LMSTUDIO_BASE_URL: http://host.containers.internal:1234/v1
 
     ports:
       - "127.0.0.1:15432:5432"
@@ -28,6 +33,7 @@ services:
     volumes:
       - pgdev-data:/var/lib/postgresql
       - ./workspace:/workspace:Z
+      - ./config/opencode.json:/etc/opencode/opencode.json:ro,Z
       - pgdev-cargo:/opt/cargo
       - pgdev-rustup:/opt/rustup
       - pgdev-opencode-data:/root/.local/share/opencode
