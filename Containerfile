@@ -25,6 +25,7 @@ RUN apt-get update && \
     ENV CARGO_HOME=/opt/cargo
     ENV PATH="/opt/cargo/bin:/root/.opencode/bin:${PATH}"
     RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal 
+    RUN rustup component add clippy
 
     # pgrx für die PostgreSQL-Extension; nach /usr/local, weil /opt/cargo ein Volume ist
     ARG PGRX_VERSION=0.19.3
