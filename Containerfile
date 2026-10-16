@@ -29,15 +29,15 @@ RUN apt-get update && \
     # OpenCode 2 installieren
     RUN curl -fsSL https://opencode.ai/v2/install | bash
 
-    # MCP-Adapter installieren und bauen
+    # MCP-Adapter installieren, patchen (Bind-Adresse, ein McpServer je Verbindung) und bauen
+    ARG OPENCODE_MCP_REF=9df20422e3e83325a543d4d02f97b279b97c1fe5
+    COPY patches/opencode-mcp-http.patch /tmp/opencode-mcp-http.patch
     RUN git clone \
         https://github.com/Traves-Theberge/opencode-mcp.git \
         /opt/opencode-mcp \
     && cd /opt/opencode-mcp \
-    && sed -i \
-        "/httpPort: process.env.MCP_HTTP_PORT ? parseInt(process.env.MCP_HTTP_PORT, 10) : undefined,/a\\        httpHostname: process.env.MCP_HTTP_HOST ?? '127.0.0.1'," \
-        src/server/mcp.ts \
-    && grep -q "httpHostname: process.env.MCP_HTTP_HOST" src/server/mcp.ts \
+    && git checkout "$OPENCODE_MCP_REF" \
+    && git apply /tmp/opencode-mcp-http.patch \
     && npm install \
     && npm run build \
     && test -f dist/index.js
